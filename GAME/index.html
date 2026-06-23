@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap"
+      rel="stylesheet"
+    />
+    <title>Game</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        padding: 0;
+        margin: 0;
+      }
+      body {
+        overflow: hidden;
+        background: #000;
+      }
+      canvas {
+        display: block;
+      }
+      #mobile-controls {
+        display: none;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 220px;
+        z-index: 100;
+        pointer-events: none;
+      }
+      .ctrl-left {
+        position: absolute;
+        left: 16px;
+        bottom: 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        pointer-events: all;
+      }
+      .ctrl-right {
+        position: absolute;
+        right: 16px;
+        bottom: 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        pointer-events: all;
+      }
+      .ctrl-row {
+        display: flex;
+        gap: 6px;
+      }
+      .btn-ctrl {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        font-size: 1.3rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        cursor: pointer;
+        transition: background 0.1s;
+      }
+      .btn-ctrl:active,
+      .btn-ctrl.pressed {
+        background: rgba(255, 255, 255, 0.25);
+      }
+      .btn-ctrl.attack {
+        width: 64px;
+        height: 64px;
+        background: rgba(200, 50, 50, 0.5);
+        border-color: rgba(255, 100, 100, 0.5);
+        font-size: 1rem;
+        font-family: "Pixelify Sans", monospace;
+      }
+      .btn-ctrl.block {
+        width: 64px;
+        height: 64px;
+        background: rgba(50, 110, 200, 0.5);
+        border-color: rgba(100, 170, 255, 0.5);
+        font-size: 0.9rem;
+        font-family: "Pixelify Sans", monospace;
+      }
+      .player-label {
+        font-family: "Pixelify Sans", monospace;
+        font-size: 0.7rem;
+        color: rgba(255, 255, 255, 0.6);
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin-bottom: 2px;
+      }
+      @media (max-width: 900px) {
+        #mobile-controls {
+          display: block;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="mycanvas"></canvas>
+
+    <div id="mobile-controls">
+      <div class="ctrl-left">
+        <div class="player-label">Samurai (W/A/D/Space/S)</div>
+        <div class="btn-ctrl" id="btn-sam-up">↑</div>
+        <div class="ctrl-row">
+          <div class="btn-ctrl" id="btn-sam-left">←</div>
+          <div class="btn-ctrl" id="btn-sam-right">→</div>
+        </div>
+        <div class="ctrl-row">
+          <div class="btn-ctrl attack" id="btn-sam-attack">ATK</div>
+          <div class="btn-ctrl block" id="btn-sam-block">BLOCK</div>
+        </div>
+      </div>
+
+      <div class="ctrl-right">
+        <div class="player-label">King (↑↓←→ / RShift)</div>
+        <div class="btn-ctrl" id="btn-king-up">↑</div>
+        <div class="ctrl-row">
+          <div class="btn-ctrl" id="btn-king-left">←</div>
+          <div class="btn-ctrl" id="btn-king-right">→</div>
+        </div>
+        <div class="ctrl-row">
+          <div class="btn-ctrl attack" id="btn-king-attack">ATK</div>
+          <div class="btn-ctrl block" id="btn-king-block">BLOCK</div>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+
+    <script>
+      function simulateKey(code, type) {
+        const event = new KeyboardEvent(type, { code, bubbles: true });
+        document.dispatchEvent(event);
+      }
+      const btnMap = {
+        "btn-sam-up": "KeyW",
+        "btn-sam-left": "KeyA",
+        "btn-sam-right": "KeyD",
+        "btn-sam-attack": "Space",
+        "btn-sam-block": "KeyS",
+        "btn-king-up": "ArrowUp",
+        "btn-king-left": "ArrowLeft",
+        "btn-king-right": "ArrowRight",
+        "btn-king-attack": "ArrowDown",
+        "btn-king-block": "ShiftRight",
+      };
+
+      const tapOnly = new Set([
+        "btn-sam-up",
+        "btn-sam-attack",
+        "btn-king-up",
+        "btn-king-attack",
+      ]);
+
+      Object.entries(btnMap).forEach(([id, code]) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+
+        const press = () => {
+          el.classList.add("pressed");
+          simulateKey(code, "keydown");
+        };
+        const release = () => {
+          el.classList.remove("pressed");
+          simulateKey(code, "keyup");
+        };
+
+        el.addEventListener(
+          "touchstart",
+          (e) => {
+            e.preventDefault();
+            press();
+          },
+          { passive: false },
+        );
+
+        el.addEventListener(
+          "touchend",
+          (e) => {
+            e.preventDefault();
+            release();
+          },
+          { passive: false },
+        );
+
+        el.addEventListener(
+          "touchcancel",
+          (e) => {
+            e.preventDefault();
+            release();
+          },
+          { passive: false },
+        );
+      });
+    </script>
+  </body>
+</html>

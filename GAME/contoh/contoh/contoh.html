@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Looping Background Game</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden;
+        background: #222;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        user-select: none;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+      #gameCanvas {
+        background: #000;
+        border: 5px solid #1e90ff;
+        border-radius: 12px;
+        box-shadow: 0 0 30px #1e90ffcc;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas
+      id="gameCanvas"
+      width="800"
+      height="400"
+      tabindex="0"
+      aria-label="Game canvas"
+    ></canvas>
+
+    <script>
+      // Settings
+      const canvas = document.getElementById("gameCanvas");
+      const ctx = canvas.getContext("2d");
+
+      const canvasWidth = canvas.width;
+      const canvasHeight = canvas.height;
+
+      const groundHeight = 60; // invisible ground height from bottom
+
+      // Background image setup
+      const bgImage = new Image();
+      bgImage.src = "battleground3.png"; // free forest background image
+
+      // Player image setup
+      const playerImage = new Image();
+      playerImage.src = "amongus.png"; // small player sprite
+
+      // Wait for images to load before starting game
+      let assetsLoaded = 0;
+      function assetLoaded() {
+        assetsLoaded++;
+        if (assetsLoaded === 2) {
+          requestAnimationFrame(gameLoop);
+        }
+      }
+      bgImage.onload = assetLoaded;
+      playerImage.onload = assetLoaded;
+
+      // Player properties
+      const player = {
+        x: canvasWidth / 2,
+        y: canvasHeight - groundHeight - 64, // initial y, 64 is player height
+        width: 48,
+        height: 64,
+        vx: 0,
+        vy: 0,
+        speed: 4,
+        jumping: false,
+        grounded: false,
+        jumpForce: 14,
+      };
+
+      // Background scrolling offset
+      let bgOffsetX = 0;
+      const bgWidth = 800; // typical width of bg image or scaled width
+      const bgHeight = 400;
+
+      // Key state
+      const keys = {};
+
+      // Handle keyboard events
+      canvas.addEventListener("keydown", function (e) {
+        if (["ArrowLeft", "ArrowRight", "ArrowUp", "Space"].includes(e.code)) {
+          e.preventDefault();
+        }
+        keys[e.code] = true;
+      });
+      canvas.addEventListener("keyup", function (e) {
+        keys[e.code] = false;
+      });
+
+      // Gravity
+      const gravity = 0.8;
+
+      // Draw background - looping
+      function drawBackground() {
+        // Draw two images side by side to loop horizontally
+        let x1 = -bgOffsetX;
+        let x2 = x1 + bgWidth;
+
+        ctx.drawImage(bgImage, x1, 0, bgWidth, bgHeight);
+        ctx.drawImage(bgImage, x2, 0, bgWidth, bgHeight);
+      }
+
+      // Draw player
+      function drawPlayer() {
+        ctx.drawImage(
+          playerImage,
+          player.x,
+          player.y,
+          player.width,
+          player.height
+        );
+      }
+
+      // Game loop
+      function gameLoop() {
+        // Clear canvas
+        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+        // Background scrolling logic:
+        // If player is within 50px of left or right edges,
+        // shift bgOffsetX accordingly for looping background.
+        if (player.vx !== 0) {
+          if (player.x < 50) {
+            bgOffsetX -= player.speed;
+          } else if (player.x > canvasWidth - 50 - player.width) {
+            bgOffsetX += player.speed;
+          }
+        }
+
+        // Normalize bgOffsetX for looping
+        if (bgOffsetX < 0) bgOffsetX += bgWidth;
+        if (bgOffsetX > bgWidth) bgOffsetX -= bgWidth;
+
+        // Draw background
+        drawBackground();
+
+        // Player movement logic
+        if (keys["ArrowLeft"]) {
+          player.vx = -player.speed;
+        } else if (keys["ArrowRight"]) {
+          player.vx = player.speed;
+        } else {
+          player.vx = 0;
+        }
+
+        // Jump check
+        if ((keys["ArrowUp"] || keys["Space"]) && player.grounded) {
+          player.vy = -player.jumpForce;
+          player.grounded = false;
+          player.jumping = true;
+        }
+
+        // Apply gravity to velocity
+        player.vy += gravity;
+
+        // Update player position with velocity
+        player.x += player.vx;
+        player.y += player.vy;
+
+        // Ground collision detection (invisible ground)
+        const groundY = canvasHeight - groundHeight - player.height;
+        if (player.y > groundY) {
+          player.y = groundY;
+          player.vy = 0;
+          player.grounded = true;
+          player.jumping = false;
+        }
+
+        // Prevent player going off screen horizontally
+        if (player.x < 0) player.x = 0;
+        if (player.x > canvasWidth - player.width)
+          player.x = canvasWidth - player.width;
+
+        // Draw player
+        drawPlayer();
+
+        // Request next frame
+        requestAnimationFrame(gameLoop);
+      }
+
+      // Set initial focus on canvas to detect key presses right away
+      canvas.focus();
+    </script>
+  </body>
+</html>

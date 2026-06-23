@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rental Mobil App — Syadid Jawawi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Dancing+Script:wght@700&family=Playfair+Display:wght@700;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="detail.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+    />
+  </head>
+  <body class="detail-page">
+    <div class="wrapper">
+      <nav>
+        <div class="logo">
+          <a href="index.html">Syadid</a>
+        </div>
+        <a href="index.html#portfolio" class="back-btn">←</a>
+      </nav>
+
+      <div class="detail-hero">
+        <div class="detail-hero-inner">
+          <div class="detail-eyebrow">
+            <div class="detail-eyebrow-line"></div>
+            <span>Web App</span>
+          </div>
+          <h1 class="detail-title">Rental Mobil<br /><span>App</span></h1>
+          <p class="detail-desc">
+            Aplikasi web rental mobil berbasis PHP dengan fitur manajemen
+            kendaraan, pemesanan, dan laporan transaksi. Dibangun menggunakan
+            CodeIgniter 3 dengan tampilan yang responsif dan alur pemesanan yang
+            intuitif.
+          </p>
+          <div class="detail-tags">
+            <span class="tag">CodeIgniter 3</span>
+            <span class="tag">PHP</span>
+            <span class="tag">AJAX</span>
+            <span class="tag">JQuery</span>
+            <span class="tag">MySQL</span>
+            <span class="tag">Bootstrap</span>
+          </div>
+        </div>
+      </div>
+
+      <section class="detail-section">
+        <div class="detail-section-inner">
+          <div class="detail-section-header">
+            <p class="section-eyebrow">Screenshots</p>
+            <h2 class="section-title">Project <span>Preview</span></h2>
+            <div class="section-divider"></div>
+          </div>
+
+          <div class="detail-gallery">
+            <div class="detail-gallery-item">
+              <img src="foto/daftar.png" alt="Daftar Mobil" />
+              <div class="detail-gallery-overlay">
+                <div class="detail-gallery-label">Daftar Kendaraan</div>
+                <button
+                  class="btn-detail"
+                  onclick="openLightbox('foto/daftar.png', 'Daftar Kendaraan')"
+                >
+                  Lihat Detail
+                </button>
+              </div>
+            </div>
+            <div class="detail-gallery-item">
+              <img src="foto/detail.png" alt="Detail Mobil" />
+              <div class="detail-gallery-overlay">
+                <div class="detail-gallery-label">Detail Kendaraan</div>
+                <button
+                  class="btn-detail"
+                  onclick="openLightbox('foto/detail.png', 'Detail Kendaraan')"
+                >
+                  Lihat Detail
+                </button>
+              </div>
+            </div>
+            <div class="detail-gallery-item">
+              <img src="foto/form.png" alt="Form Pemesanan" />
+              <div class="detail-gallery-overlay">
+                <div class="detail-gallery-label">Form Pemesanan</div>
+                <button
+                  class="btn-detail"
+                  onclick="openLightbox('foto/form.png', 'Form Pemesanan')"
+                >
+                  Lihat Detail
+                </button>
+              </div>
+            </div>
+            <div class="detail-gallery-item">
+              <img src="foto/riwayat.png" alt="Riwayat" />
+              <div class="detail-gallery-overlay">
+                <div class="detail-gallery-label">Riwayat Transaksi</div>
+                <button
+                  class="btn-detail"
+                  onclick="
+                    openLightbox('foto/riwayat.png', 'Riwayat Transaksi')
+                  "
+                >
+                  Lihat Detail
+                </button>
+              </div>
+            </div>
+            <div class="detail-gallery-item">
+              <img src="foto/admin.png" alt="Manajemen" />
+              <div class="detail-gallery-overlay">
+                <div class="detail-gallery-label">Manajemen Admin</div>
+                <button
+                  class="btn-detail"
+                  onclick="openLightbox('foto/admin.png', 'Manajemen Admin')"
+                >
+                  Lihat Detail
+                </button>
+              </div>
+            </div>
+            <div class="detail-gallery-item">
+              <img src="foto/login.png" alt="Login" />
+              <div class="detail-gallery-overlay">
+                <div class="detail-gallery-label">Halaman Login</div>
+                <button
+                  class="btn-detail"
+                  onclick="openLightbox('foto/login.png', 'Halaman Login')"
+                >
+                  Lihat Detail
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+            <div class="lightbox-inner">
+              <button class="lightbox-close" onclick="closeLightbox()">
+                &times;
+              </button>
+              <img src="" alt="" id="lightbox-img" />
+              <p class="lightbox-caption" id="lightbox-caption"></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        <div class="footer-inner">
+          <div class="footer-brand">
+            <a href="index.html">Syadid</a>
+            <p class="footer-copy">
+              Designer &amp; Developer based in Indonesia
+            </p>
+          </div>
+          <div class="footer-nav">
+            <a href="index.html#about">About</a>
+            <a href="index.html#skills">Skills</a>
+            <a href="index.html#portfolio">Work</a>
+            <a href="index.html#contact">Contact</a>
+          </div>
+          <div class="footer-socials">
+            <a
+              href="https://github.com/diddsyntx"
+              class="social-link"
+              aria-label="GitHub"
+              ><i class="fa-brands fa-github"></i
+            ></a>
+            <a
+              href="https://www.instagram.com/sydd999_/"
+              class="social-link"
+              aria-label="Instagram"
+              ><i class="fa-brands fa-instagram"></i
+            ></a>
+            <a
+              href="https://www.tiktok.com/@syadd999_"
+              class="social-link"
+              aria-label="TikTok"
+              ><i class="fa-brands fa-tiktok"></i
+            ></a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>© 2026 Syadid Jawawi Pratama — All rights reserved</p>
+        </div>
+      </footer>
+    </div>
+    <script>
+      function openLightbox(src, caption) {
+        document.getElementById("lightbox-img").src = src;
+        document.getElementById("lightbox-caption").textContent = caption;
+        document.getElementById("lightbox").classList.add("active");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeLightbox(event) {
+        if (
+          !event ||
+          event.target === document.getElementById("lightbox") ||
+          event.currentTarget.classList.contains("lightbox-close")
+        ) {
+          document.getElementById("lightbox").classList.remove("active");
+          document.body.style.overflow = "";
+        }
+      }
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeLightbox();
+      });
+    </script>
+  </body>
+</html>
